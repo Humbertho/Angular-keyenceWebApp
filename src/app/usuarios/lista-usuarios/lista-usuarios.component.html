@@ -1,0 +1,116 @@
+<div class="conatiner">
+    <nav class="nav justify-content-center bg-dark">
+        <h2 style="color: white;">Lista de usuarios!</h2>
+    </nav>    
+
+    <div class="conatiner" style="margin-left: 10%; margin-right: 10%;">
+        <div class="col-sm-12">
+            <hr style="width:100%;text-align:left;margin-left:0">
+            <h4>Sube datos con un archivo excel</h4>
+            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#subirDatos" (click)="limpiar()">
+                Seleccionar archivo
+            </button>
+            <hr style="width:100%;text-align:left;margin-left:0">
+        </div>
+
+        <div class="col-sm-12">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th scope="col">#</th>
+                        <th scope="col">Nombre de Usuario</th>
+                        <th scope="col">Fecha de registro</th>
+                        <th scope="col">Hora de entrada</th>
+                        <th scope="col">Hora de salida</th>
+                        <th scope="col"> </th>
+                        <th scope="col"> </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let usuarios of usuariosLista; let index1 = index">
+                        <th scope="row">{{ index1 + 1 }}</th>
+                        <td>{{ usuarios.userName }}</td>
+                        <td>{{ usuarios.registerDate }}</td>
+                        <td>{{ usuarios.punchIn }}</td>
+                        <td>{{ usuarios.punchOut }}</td>
+                        <th scope="col">
+                            <button type="button" class="btn btn-warning" routerLink = "/editar/{{usuarios.id}}" (click)="subirId(usuarios.id)">
+                                Editar
+                            </button>
+                        </th>
+                        <th scope="col">
+                            <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#eliminarDato" 
+                                (click) = "memoriaTemporal(usuarios.id, usuarios.userName)">
+                                Eliminar
+                            </button>
+                        </th>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<!-- Modal subir datos con excel-->
+<div class="modal fade" id="subirDatos" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="exampleModalLabel">Seleccionar archivo Excel</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body" id="list-example">
+                <input type="file" class="form-control" (change) = "onFileChange($event)" multiple="false"/>
+
+                <hr style="width:100%;text-align:left;margin-left:0">
+
+                <div *ngIf="banderaListaExcel">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th scope="col">#</th>
+                                <th scope="col">Nombre de usuario</th>
+                                <th scope="col">Fecha de registro</th>
+                                <th scope="col">Hora de entrada</th>
+                                <th scope="col">Hora de salida</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr *ngFor="let data of usuariosListaExcel; let index1 = index">
+                                <td>{{ index1 + 1 }}</td>
+                                <td>{{ data.userName }}</td>
+                                <td>{{ data.registerDate }}</td>
+                                <td>{{ data.punchIn }}</td>
+                                <td>{{ data.punchOut }}</td>
+                            </tr>
+                        </tbody>
+                    </table>    
+                </div>                              
+            </div>
+            
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                <button type="button" class="btn btn-primary" [disabled]="!banderaListaExcel" (click) = "guardarDatos()" data-bs-dismiss="modal">Guardar datos</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal eliminar una columna-->
+<div class="modal fade" id="eliminarDato" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h1 class="modal-title fs-5" id="exampleModalLabel">Eliminar usuario</h1>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <p>Estas seguro de eliminar el usuario con el nombre: {{ memoriaTemporalUserName }}</p>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+          <button type="button" class="btn btn btn-danger" data-bs-dismiss="modal" (click)="borrarUsuario(memoriaTemporalId)">Eliminar</button>
+        </div>
+      </div>
+    </div>
+</div>
